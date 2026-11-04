@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: orders-cqrs
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: orders-indexer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      max-poll-records: 500
+    listener:
+      type: batch
+
+app:
+  kafka:
+    topic: ${ORDERS_TOPIC:orders-snapshots}
+  index-zone: ${INDEX_ZONE:UTC}
+
+opensearch:
+  host: ${OPENSEARCH_HOST:http://localhost:9200}
+  index-prefix: ${OPENSEARCH_INDEX_PREFIX:orders}
+  template-name: ${OPENSEARCH_TEMPLATE_NAME:orders-template}
+
+logging:
+  level:
+    org.example.orders: INFO
