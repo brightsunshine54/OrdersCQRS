@@ -27,6 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <opensearch-java.version>3.10.0</opensearch-java.version>
         <opensearch-rest-client.version>3.9.0</opensearch-rest-client.version>
+        <spring-data-opensearch.version>3.1.4</spring-data-opensearch.version>
     </properties>
 
     <dependencyManagement>
@@ -45,6 +46,11 @@
                 <groupId>org.opensearch.client</groupId>
                 <artifactId>opensearch-rest-client</artifactId>
                 <version>${opensearch-rest-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.opensearch.client</groupId>
+                <artifactId>spring-data-opensearch</artifactId>
+                <version>${spring-data-opensearch.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -28,17 +28,20 @@ public class IndexTemplateInitializer implements ApplicationRunner {
 
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
+    private final IndexTemplateGenerator templateGenerator;
     private final String templateName;
     private final String indexPattern;
     private final String searchAlias;
 
     public IndexTemplateInitializer(RestClient restClient,
                                     ObjectMapper objectMapper,
+                                    IndexTemplateGenerator templateGenerator,
                                     @Value("${opensearch.template-name:orders-template}") String templateName,
                                     @Value("${opensearch.index-pattern:orders-*}") String indexPattern,
                                     @Value("${opensearch.search-alias:orders-search}") String searchAlias) {
         this.restClient = restClient;
         this.objectMapper = objectMapper;
+        this.templateGenerator = templateGenerator;
         this.templateName = templateName;
         this.indexPattern = indexPattern;
         this.searchAlias = searchAlias;
@@ -46,8 +49,7 @@ public class IndexTemplateInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        ObjectNode template = new IndexTemplateGenerator()
-                .generate(indexPattern, searchAlias, OrderSnapshot.class);
+        ObjectNode template = templateGenerator.generate(indexPattern, searchAlias, OrderSnapshot.class);
         String templateJson = objectMapper.writeValueAsString(template);
         for (int attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
             try {
