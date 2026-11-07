@@ -1,5 +1,7 @@
 package org.example.orders.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -8,6 +10,8 @@ import org.springframework.data.elasticsearch.annotations.MultiField;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class OrderItem {
 
     @Transient
@@ -22,36 +26,4 @@ public class OrderItem {
 
     @Transient
     private BigDecimal price;
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }
