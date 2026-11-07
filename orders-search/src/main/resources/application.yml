@@ -8,6 +8,8 @@ server:
 opensearch:
   host: ${OPENSEARCH_HOST:http://localhost:9200}
   search-alias: ${OPENSEARCH_SEARCH_ALIAS:orders-search}
+  index-pattern: ${OPENSEARCH_INDEX_PATTERN:orders-*}
+  template-name: ${OPENSEARCH_TEMPLATE_NAME:orders-template}
 
 logging:
   level:

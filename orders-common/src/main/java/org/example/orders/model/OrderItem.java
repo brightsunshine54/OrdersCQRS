@@ -1,11 +1,16 @@
 package org.example.orders.model;
 
+import org.example.orders.model.annotation.IndexedField;
+
 import java.math.BigDecimal;
 
 public class OrderItem {
 
     private String productId;
+
+    @IndexedField(type = "text")
     private String name;
+
     private Integer quantity;
     private BigDecimal price;
 

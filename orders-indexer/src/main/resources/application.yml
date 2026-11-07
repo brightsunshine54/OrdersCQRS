@@ -20,7 +20,6 @@ app:
 opensearch:
   host: ${OPENSEARCH_HOST:http://localhost:9200}
   index-prefix: ${OPENSEARCH_INDEX_PREFIX:orders}
-  template-name: ${OPENSEARCH_TEMPLATE_NAME:orders-template}
 
 logging:
   level:
