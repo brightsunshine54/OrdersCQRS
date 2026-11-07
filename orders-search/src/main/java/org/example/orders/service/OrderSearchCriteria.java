@@ -3,6 +3,7 @@ package org.example.orders.service;
 import java.time.Instant;
 
 public record OrderSearchCriteria(
+        String orderId,
         String status,
         String customerId,
         String currency,

@@ -27,6 +27,10 @@ public class OrderSearchService {
 
     public SearchResponse<OrderSnapshot> search(OrderSearchCriteria criteria) throws IOException {
         BoolQuery.Builder bool = new BoolQuery.Builder();
+        if (criteria.orderId() != null) {
+            // orderId — это _id документа, в маппинге полей его нет
+            bool.filter(f -> f.term(t -> t.field("_id").value(FieldValue.of(criteria.orderId()))));
+        }
         if (criteria.status() != null) {
             bool.filter(f -> f.term(t -> t.field("status").value(FieldValue.of(criteria.status()))));
         }

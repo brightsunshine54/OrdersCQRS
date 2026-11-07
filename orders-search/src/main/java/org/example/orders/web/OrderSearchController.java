@@ -26,12 +26,12 @@ public class OrderSearchController implements OrdersApi {
     }
 
     @Override
-    public SearchResult search(String status, String customerId, String currency,
+    public SearchResult search(String orderId, String status, String customerId, String currency,
                                OffsetDateTime dateFrom, OffsetDateTime dateTo,
                                String q, Integer from, Integer size) {
         try {
             SearchResponse<org.example.orders.model.OrderSnapshot> response = orderSearchService.search(
-                    new OrderSearchCriteria(status, customerId, currency,
+                    new OrderSearchCriteria(orderId, status, customerId, currency,
                             toInstant(dateFrom), toInstant(dateTo), q,
                             from != null ? from : 0, size != null ? size : 20));
             return toApi(response);

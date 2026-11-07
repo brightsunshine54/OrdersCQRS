@@ -17,6 +17,12 @@ paths:
         Bool-запрос по алиасу orders-search: точные фильтры по keyword-полям,
         диапазон по updatedAt, частичное совпадение по названию позиции (nested)
       parameters:
+        - name: orderId
+          in: query
+          description: Идентификатор заказа (точное совпадение)
+          required: false
+          schema:
+            type: string
         - name: status
           in: query
           description: Статус заказа, например PAID

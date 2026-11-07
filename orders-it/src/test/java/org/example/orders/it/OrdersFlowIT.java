@@ -108,12 +108,21 @@ class OrdersFlowIT {
                 orderJson("it-3", "cust-7", "NEW", "Книга по Kafka"));
 
         SearchResult paid = awaitSearch(
-                () -> ordersApi.search("PAID", null, null, null, null, null, null, null), 2);
+                () -> ordersApi.search(null, "PAID", null, null, null, null, null, null, null), 2);
         assertThat(paid.getOrders())
                 .allSatisfy(order -> assertThat(order.getStatus()).isEqualTo("PAID"));
 
-        awaitSearch(() -> ordersApi.search(null, "cust-42", null, null, null, null, null, null), 2);
-        awaitSearch(() -> ordersApi.search(null, null, null, null, null, "Книга", null, null), 2);
+        awaitSearch(() -> ordersApi.search(null, null, "cust-42", null, null, null, null, null, null), 2);
+        awaitSearch(() -> ordersApi.search(null, null, null, null, null, null, "Книга", null, null), 2);
+
+        SearchResult byId = awaitSearch(
+                () -> ordersApi.search("it-1", null, null, null, null, null, null, null, null), 1);
+        assertThat(byId.getOrders())
+                .singleElement()
+                .satisfies(order -> {
+                    assertThat(order.getOrderId()).isEqualTo("it-1");
+                    assertThat(order.getCustomerId()).isEqualTo("cust-42");
+                });
     }
 
     private static void produce(String... messages) {
