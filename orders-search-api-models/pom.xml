@@ -39,6 +39,44 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.13</version>
         </dependency>
+
+        <!-- зависимости сгенерированного Feign-клиента -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.21.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -49,6 +87,7 @@
                 <version>${openapi-generator.version}</version>
                 <executions>
                     <execution>
+                        <id>server-api</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -65,6 +104,28 @@
                                 <dateLibrary>java8</dateLibrary>
                                 <useBeanValidation>false</useBeanValidation>
                                 <performBeanValidation>false</performBeanValidation>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>feign-client</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>feign</library>
+                            <apiPackage>org.example.orders.client.api</apiPackage>
+                            <modelPackage>org.example.orders.client.model</modelPackage>
+                            <invokerPackage>org.example.orders.client.invoker</invokerPackage>
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                             <generateApiTests>false</generateApiTests>

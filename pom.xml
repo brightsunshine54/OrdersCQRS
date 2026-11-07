@@ -32,6 +32,7 @@
         <springdoc.version>3.2.0</springdoc.version>
         <openapi-generator.version>7.27.0</openapi-generator.version>
         <swagger-annotations.version>2.2.55</swagger-annotations.version>
+        <feign.version>13.17</feign.version>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +71,26 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-jackson</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-slf4j</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
