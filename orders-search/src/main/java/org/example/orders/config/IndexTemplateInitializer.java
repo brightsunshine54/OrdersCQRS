@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
@@ -19,6 +20,7 @@ import tools.jackson.databind.node.ObjectNode;
  * и применяет его в OpenSearch. Операция идемпотентна (upsert шаблона).
  */
 @Component
+@ConditionalOnProperty(name = "opensearch.template-init.enabled", matchIfMissing = true)
 public class IndexTemplateInitializer implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(IndexTemplateInitializer.class);

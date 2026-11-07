@@ -20,6 +20,7 @@
         <module>orders-common</module>
         <module>orders-indexer</module>
         <module>orders-search</module>
+        <module>orders-search-client</module>
     </modules>
 
     <properties>
@@ -28,6 +29,9 @@
         <opensearch-java.version>3.10.0</opensearch-java.version>
         <opensearch-rest-client.version>3.9.0</opensearch-rest-client.version>
         <spring-data-opensearch.version>3.1.4</spring-data-opensearch.version>
+        <springdoc.version>3.2.0</springdoc.version>
+        <openapi-generator.version>7.27.0</openapi-generator.version>
+        <feign.version>13.17</feign.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +55,31 @@
                 <groupId>org.opensearch.client</groupId>
                 <artifactId>spring-data-opensearch</artifactId>
                 <version>${spring-data-opensearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-jackson</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-slf4j</artifactId>
+                <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
