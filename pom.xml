@@ -18,9 +18,9 @@
 
     <modules>
         <module>orders-common</module>
+        <module>orders-search-api-models</module>
         <module>orders-indexer</module>
         <module>orders-search</module>
-        <module>orders-search-client</module>
     </modules>
 
     <properties>
@@ -31,7 +31,7 @@
         <spring-data-opensearch.version>3.1.4</spring-data-opensearch.version>
         <springdoc.version>3.2.0</springdoc.version>
         <openapi-generator.version>7.27.0</openapi-generator.version>
-        <feign.version>13.17</feign.version>
+        <swagger-annotations.version>2.2.55</swagger-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +39,11 @@
             <dependency>
                 <groupId>org.example</groupId>
                 <artifactId>orders-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>orders-search-api-models</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -62,24 +67,9 @@
                 <version>${springdoc.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-core</artifactId>
-                <version>${feign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-jackson</artifactId>
-                <version>${feign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-slf4j</artifactId>
-                <version>${feign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-okhttp</artifactId>
-                <version>${feign.version}</version>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

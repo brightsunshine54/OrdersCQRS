@@ -10,54 +10,34 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>orders-search-client</artifactId>
-    <description>Feign-клиент orders-search, сгенерированный из живой OpenAPI-спецификации</description>
+    <artifactId>orders-search-api-models</artifactId>
+    <description>Контракт orders-search: openapi.yaml и сгенерированный по нему Spring-интерфейс API</description>
 
     <dependencies>
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-jackson</artifactId>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-okhttp</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.21.7</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.13</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign.form</groupId>
-            <artifactId>feign-form</artifactId>
-            <version>3.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
         </dependency>
     </dependencies>
 
@@ -73,15 +53,19 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!-- спецификация выгружается тестом OpenApiSpecExportTest модуля orders-search -->
-                            <inputSpec>${project.basedir}/../orders-search/target/openapi/openapi.json</inputSpec>
-                            <generatorName>java</generatorName>
-                            <library>feign</library>
-                            <apiPackage>org.example.orders.client.api</apiPackage>
-                            <modelPackage>org.example.orders.client.model</modelPackage>
-                            <invokerPackage>org.example.orders.client.invoker</invokerPackage>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>org.example.orders.api</apiPackage>
+                            <modelPackage>org.example.orders.api.model</modelPackage>
                             <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                                <useResponseEntity>false</useResponseEntity>
                                 <dateLibrary>java8</dateLibrary>
+                                <useBeanValidation>false</useBeanValidation>
+                                <performBeanValidation>false</performBeanValidation>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>

@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Orders Search API
+  description: Поиск по снимкам заказов в OpenSearch (read-side CQRS)
+  version: "1.0"
+tags:
+  - name: orders
+    description: Поиск заказов
+paths:
+  /orders/search:
+    get:
+      tags:
+        - orders
+      operationId: search
+      summary: Поиск заказов
+      description: >-
+        Bool-запрос по алиасу orders-search: точные фильтры по keyword-полям,
+        диапазон по updatedAt, частичное совпадение по названию позиции (nested)
+      parameters:
+        - name: status
+          in: query
+          description: Статус заказа, например PAID
+          required: false
+          schema:
+            type: string
+        - name: customerId
+          in: query
+          description: Идентификатор покупателя
+          required: false
+          schema:
+            type: string
+        - name: currency
+          in: query
+          description: Валюта, например RUB
+          required: false
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          description: Нижняя граница updatedAt, ISO-8601
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          description: Верхняя граница updatedAt (не включительно), ISO-8601
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: q
+          in: query
+          description: Частичное совпадение по названию позиции заказа
+          required: false
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: Смещение для пагинации
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          description: Размер страницы
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+      responses:
+        "200":
+          description: Результат поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+components:
+  schemas:
+    SearchResult:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+          description: Общее число найденных заказов
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderSnapshot'
+    OrderSnapshot:
+      type: object
+      description: Снимок заказа
+      properties:
+        orderId:
+          type: string
+        customerId:
+          type: string
+        status:
+          type: string
+        totalAmount:
+          type: number
+        currency:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        updatedAt:
+          type: string
+          format: date-time
+        attributes:
+          type: object
+          additionalProperties: true
+          description: Произвольные данные, хранятся без индексации
+    OrderItem:
+      type: object
+      description: Позиция заказа
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        price:
+          type: number

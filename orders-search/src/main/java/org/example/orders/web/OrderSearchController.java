@@ -1,27 +1,23 @@
 package org.example.orders.web;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.orders.model.OrderSnapshot;
+import org.example.orders.api.OrdersApi;
+import org.example.orders.api.model.OrderItem;
+import org.example.orders.api.model.SearchResult;
 import org.example.orders.service.OrderSearchCriteria;
 import org.example.orders.service.OrderSearchService;
 import org.opensearch.client.opensearch.core.SearchResponse;
 import org.opensearch.client.opensearch.core.search.Hit;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
-@RequestMapping("/orders")
-@Tag(name = "orders", description = "Поиск заказов по снимкам в OpenSearch")
-public class OrderSearchController {
+public class OrderSearchController implements OrdersApi {
 
     private final OrderSearchService orderSearchService;
 
@@ -29,37 +25,55 @@ public class OrderSearchController {
         this.orderSearchService = orderSearchService;
     }
 
-    @GetMapping("/search")
-    @Operation(summary = "Поиск заказов",
-            description = "Bool-запрос по алиасу orders-search: точные фильтры по keyword-полям, "
-                    + "диапазон по updatedAt, частичное совпадение по названию позиции (nested)")
-    public SearchResult search(@Parameter(description = "Статус заказа, например PAID")
-                               @RequestParam(required = false) String status,
-                               @Parameter(description = "Идентификатор покупателя")
-                               @RequestParam(required = false) String customerId,
-                               @Parameter(description = "Валюта, например RUB")
-                               @RequestParam(required = false) String currency,
-                               @Parameter(description = "Нижняя граница updatedAt, ISO-8601")
-                               @RequestParam(required = false)
-                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dateFrom,
-                               @Parameter(description = "Верхняя граница updatedAt (не включительно), ISO-8601")
-                               @RequestParam(required = false)
-                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dateTo,
-                               @Parameter(description = "Частичное совпадение по названию позиции заказа")
-                               @RequestParam(required = false) String q,
-                               @Parameter(description = "Смещение для пагинации")
-                               @RequestParam(defaultValue = "0") int from,
-                               @Parameter(description = "Размер страницы")
-                               @RequestParam(defaultValue = "20") int size) throws IOException {
-        SearchResponse<OrderSnapshot> response = orderSearchService.search(
-                new OrderSearchCriteria(status, customerId, currency, dateFrom, dateTo, q, from, size));
-        List<OrderSnapshot> orders = response.hits().hits().stream()
-                .map(Hit::source)
-                .toList();
-        long total = response.hits().total() != null ? response.hits().total().value() : orders.size();
-        return new SearchResult(total, orders);
+    @Override
+    public SearchResult search(String status, String customerId, String currency,
+                               OffsetDateTime dateFrom, OffsetDateTime dateTo,
+                               String q, Integer from, Integer size) {
+        try {
+            SearchResponse<org.example.orders.model.OrderSnapshot> response = orderSearchService.search(
+                    new OrderSearchCriteria(status, customerId, currency,
+                            toInstant(dateFrom), toInstant(dateTo), q,
+                            from != null ? from : 0, size != null ? size : 20));
+            return toApi(response);
+        } catch (IOException e) {
+            throw new IllegalStateException("Ошибка поиска в OpenSearch", e);
+        }
     }
 
-    public record SearchResult(long total, List<OrderSnapshot> orders) {
+    private static SearchResult toApi(SearchResponse<org.example.orders.model.OrderSnapshot> response) {
+        List<org.example.orders.api.model.OrderSnapshot> orders = response.hits().hits().stream()
+                .map(Hit::source)
+                .filter(Objects::nonNull)
+                .map(OrderSearchController::toApi)
+                .toList();
+        long total = response.hits().total() != null ? response.hits().total().value() : orders.size();
+        return new SearchResult().total(total).orders(orders);
+    }
+
+    private static org.example.orders.api.model.OrderSnapshot toApi(
+            org.example.orders.model.OrderSnapshot snapshot) {
+        return new org.example.orders.api.model.OrderSnapshot()
+                .orderId(snapshot.getOrderId())
+                .customerId(snapshot.getCustomerId())
+                .status(snapshot.getStatus())
+                .totalAmount(snapshot.getTotalAmount())
+                .currency(snapshot.getCurrency())
+                .items(snapshot.getItems() == null ? null
+                        : snapshot.getItems().stream().map(OrderSearchController::toApi).toList())
+                .updatedAt(snapshot.getUpdatedAt() == null ? null
+                        : snapshot.getUpdatedAt().atOffset(ZoneOffset.UTC))
+                .attributes(snapshot.getAttributes());
+    }
+
+    private static OrderItem toApi(org.example.orders.model.OrderItem item) {
+        return new OrderItem()
+                .productId(item.getProductId())
+                .name(item.getName())
+                .quantity(item.getQuantity())
+                .price(item.getPrice());
+    }
+
+    private static Instant toInstant(OffsetDateTime dateTime) {
+        return dateTime == null ? null : dateTime.toInstant();
     }
 }
