@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.kafka.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ class OrdersFlowIT {
     private static final Duration STARTUP_TIMEOUT = Duration.ofMinutes(3);
     private static final Duration INDEXING_TIMEOUT = Duration.ofSeconds(120);
 
-    private static KafkaContainer kafka;
+    private static ConfluentKafkaContainer kafka;
     private static GenericContainer<?> opensearch;
     private static Process indexerProcess;
     private static Process searchProcess;
@@ -56,13 +56,14 @@ class OrdersFlowIT {
         Assumptions.assumeTrue(DockerClientFactory.instance().isDockerAvailable(),
                 "Docker недоступен — интеграционный тест пропущен");
 
-        kafka = new KafkaContainer(DockerImageName.parse("apache/kafka:3.9.0"));
+        // cp-kafka > 7.8.0 несовместим с testcontainers (testcontainers-java#10093)
+        kafka = new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.8.0"));
         kafka.start();
 
         opensearch = new GenericContainer<>(DockerImageName.parse("opensearchproject/opensearch:2.19.0"))
                 .withEnv("discovery.type", "single-node")
                 .withEnv("DISABLE_SECURITY_PLUGIN", "true")
-                .withEnv("OPENSEARCH_JAVA_OPTS", "-Xms512m -Xmx512m")
+                .withEnv("OPENSEARCH_JAVA_OPTS", "-Xms1g -Xmx1g")
                 .withExposedPorts(9200)
                 .waitingFor(Wait.forHttp("/").forPort(9200).withStartupTimeout(STARTUP_TIMEOUT));
         opensearch.start();

@@ -1,6 +1,7 @@
 package org.example.orders.config;
 
 import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.util.Timeout;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.json.jackson3.JacksonJsonpMapper;
 import org.opensearch.client.opensearch.OpenSearchClient;
@@ -16,7 +17,11 @@ public class OpenSearchConfig {
     @Bean(destroyMethod = "close")
     public RestClient restClient(@Value("${opensearch.host:http://localhost:9200}") String host)
             throws java.net.URISyntaxException {
-        return RestClient.builder(HttpHost.create(host)).build();
+        return RestClient.builder(HttpHost.create(host))
+                .setRequestConfigCallback(config -> config
+                        .setConnectTimeout(Timeout.ofSeconds(10))
+                        .setResponseTimeout(Timeout.ofSeconds(90)))
+                .build();
     }
 
     @Bean

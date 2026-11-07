@@ -15,6 +15,7 @@ import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchC
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchSimpleTypes;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
@@ -32,7 +33,12 @@ public class OpenSearchConfig {
 
     @Bean
     public OpenSearchClient openSearchClient(RestClient restClient, ObjectMapper objectMapper) {
-        return new OpenSearchClient(new RestClientTransport(restClient, new JacksonJsonpMapper(objectMapper)));
+        // opensearch-java читает _source из общего парсера ответа — после значения легально
+        // есть ещё токены, а в Jackson 3 FAIL_ON_TRAILING_TOKENS включён по умолчанию
+        ObjectMapper transportMapper = objectMapper.rebuild()
+                .disable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                .build();
+        return new OpenSearchClient(new RestClientTransport(restClient, new JacksonJsonpMapper(transportMapper)));
     }
 
     @Bean

@@ -18,6 +18,17 @@
             <groupId>org.example</groupId>
             <artifactId>orders-search-api-models</artifactId>
         </dependency>
+        <!-- нужны не классы, а собранные jar и порядок сборки в реакторе -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>orders-indexer</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>orders-search</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
