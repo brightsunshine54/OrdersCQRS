@@ -21,6 +21,7 @@
         <module>orders-search-api-models</module>
         <module>orders-indexer</module>
         <module>orders-search</module>
+        <module>orders-it</module>
     </modules>
 
     <properties>
@@ -33,6 +34,7 @@
         <openapi-generator.version>7.27.0</openapi-generator.version>
         <swagger-annotations.version>2.2.55</swagger-annotations.version>
         <feign.version>13.17</feign.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
     <dependencyManagement>
@@ -91,6 +93,21 @@
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-okhttp</artifactId>
                 <version>${feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>kafka</artifactId>
+                <version>${testcontainers.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

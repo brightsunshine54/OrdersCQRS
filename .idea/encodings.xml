@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/orders-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orders-indexer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/orders-it/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orders-search-api-models/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orders-search-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/orders-search/src/main/java" charset="UTF-8" />
