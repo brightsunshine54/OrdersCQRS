@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: orders-search
+
+server:
+  port: 8080
+
+opensearch:
+  host: ${OPENSEARCH_HOST:http://localhost:9200}
+  search-alias: ${OPENSEARCH_SEARCH_ALIAS:orders-search}
+
+logging:
+  level:
+    org.example.orders: INFO
